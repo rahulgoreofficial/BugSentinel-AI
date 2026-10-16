@@ -1,0 +1,1671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>BugSentinel AI — Comprehensive Project Report, Technical Architecture, and User Manual</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@500;600;700;800&display=swap');
+
+  @page {
+    size: A4;
+    margin: 20mm 16mm 20mm 16mm;
+  }
+
+  @page:first {
+    margin: 0;
+  }
+
+  * {
+    box-sizing: border-box;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    font-size: 9.5pt;
+    line-height: 1.55;
+    color: #1e293b;
+    background-color: #ffffff;
+    margin: 0;
+    padding: 0;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Outfit', 'Inter', sans-serif;
+    color: #0b1329;
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+    font-weight: 700;
+    page-break-after: avoid;
+    break-after: avoid;
+  }
+
+  h1 {
+    font-size: 19pt;
+    border-bottom: 2pt solid #0284c7;
+    padding-bottom: 6px;
+    margin-top: 0;
+    margin-bottom: 14px;
+    color: #081226;
+  }
+
+  h2 {
+    font-size: 12pt;
+    color: #0f172a;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 3px;
+    margin-top: 15px;
+    margin-bottom: 4px;
+  }
+
+  h3 {
+    font-size: 10.5pt;
+    color: #0369a1;
+    margin-top: 12px;
+    margin-bottom: 3px;
+  }
+
+  p, li {
+    font-size: 9pt;
+    color: #334155;
+    line-height: 1.5;
+    margin-bottom: 5px;
+    text-align: justify;
+  }
+
+  ul, ol {
+    margin-top: 2px;
+    margin-bottom: 8px;
+    padding-left: 18px;
+  }
+
+  li {
+    margin-bottom: 3px;
+  }
+
+  code {
+    font-family: 'JetBrains Mono', Consolas, 'Courier New', monospace;
+    font-size: 8.5pt;
+    background-color: #f1f5f9;
+    color: #0f172a;
+    padding: 2px 5px;
+    border-radius: 4px;
+    border: 1px solid #e2e8f0;
+  }
+
+  pre {
+    font-family: 'JetBrains Mono', Consolas, 'Courier New', monospace;
+    font-size: 8pt;
+    background-color: #0b1220;
+    color: #f1f5f9;
+    padding: 8px 12px;
+    border-radius: 6px;
+    border-left: 3px solid #38bdf8;
+    overflow-x: hidden;
+    white-space: pre-wrap;
+    word-break: break-all;
+    margin: 8px 0;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  pre code {
+    background-color: transparent;
+    color: inherit;
+    padding: 0;
+    border: none;
+    font-size: inherit;
+  }
+
+  .chapter-page {
+    page-break-before: always;
+    break-before: page;
+    padding-top: 4px;
+  }
+
+  .chapter-number {
+    font-family: 'Outfit', sans-serif;
+    font-size: 9pt;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #0284c7;
+    margin-bottom: 3px;
+  }
+
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 8px 0 12px 0;
+    font-size: 8.2pt;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  th {
+    background-color: #0f172a;
+    color: #f8fafc;
+    font-weight: 600;
+    text-align: left;
+    padding: 6px 8px;
+    border: 1px solid #1e293b;
+    font-family: 'Outfit', sans-serif;
+    letter-spacing: 0.3px;
+  }
+
+  td {
+    padding: 5px 8px;
+    border: 1px solid #cbd5e1;
+    vertical-align: top;
+  }
+
+  tr:nth-child(even) td {
+    background-color: #f8fafc;
+  }
+
+  /* Alerts / Callouts */
+  .callout {
+    border-left: 4px solid #0284c7;
+    background-color: #f0f9ff;
+    padding: 10px 14px;
+    margin: 12px 0;
+    border-radius: 0 6px 6px 0;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  .callout-title {
+    font-weight: 700;
+    font-size: 9pt;
+    color: #0369a1;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Outfit', sans-serif;
+  }
+
+  .callout.warning {
+    border-left-color: #f59e0b;
+    background-color: #fffbeb;
+  }
+  .callout.warning .callout-title {
+    color: #b45309;
+  }
+
+  .callout.success {
+    border-left-color: #10b981;
+    background-color: #ecfdf5;
+  }
+  .callout.success .callout-title {
+    color: #047857;
+  }
+
+  .callout.danger {
+    border-left-color: #ef4444;
+    background-color: #fef2f2;
+  }
+  .callout.danger .callout-title {
+    color: #b91c1c;
+  }
+
+  /* Badges */
+  .badge {
+    display: inline-block;
+    padding: 2px 7px;
+    border-radius: 9999px;
+    font-size: 7.5pt;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+  .badge-verified { background-color: #dcfce7; color: #15803d; border: 1px solid #86efac; }
+  .badge-partial { background-color: #fef3c7; color: #b45309; border: 1px solid #fde68a; }
+  .badge-planned { background-color: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; }
+  .badge-critical { background-color: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; }
+  .badge-medium { background-color: #ffedd5; color: #c2410c; border: 1px solid #fed7aa; }
+
+  /* Cover Page */
+  .cover-page {
+    background: radial-gradient(circle at 80% 20%, #1e293b 0%, #070c18 60%, #030712 100%);
+    color: #ffffff;
+    height: 100vh;
+    padding: 45mm 22mm 22mm 22mm;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    page-break-after: always;
+    break-after: page;
+  }
+
+  .cover-brand {
+    font-family: 'Outfit', sans-serif;
+    font-size: 13pt;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #38bdf8;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .cover-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 30pt;
+    font-weight: 800;
+    line-height: 1.15;
+    color: #ffffff;
+    margin: 0 0 16px 0;
+  }
+
+  .cover-subtitle {
+    font-family: 'Inter', sans-serif;
+    font-size: 12.5pt;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #94a3b8;
+    max-width: 580px;
+    margin-bottom: 24px;
+  }
+
+  .cover-pill {
+    display: inline-block;
+    padding: 6px 14px;
+    background: rgba(56, 189, 248, 0.12);
+    border: 1px solid rgba(56, 189, 248, 0.4);
+    border-radius: 9999px;
+    font-size: 8.5pt;
+    color: #7dd3fc;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .cover-meta-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    background: rgba(15, 23, 42, 0.75);
+    border: 1px solid rgba(51, 65, 85, 0.8);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-top: 35px;
+  }
+
+  .cover-meta-item {
+    font-size: 8.5pt;
+  }
+
+  .cover-meta-label {
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 7pt;
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
+
+  .cover-meta-value {
+    color: #f1f5f9;
+    font-weight: 500;
+    font-size: 9pt;
+  }
+
+  .cover-footer {
+    font-size: 8pt;
+    color: #64748b;
+    display: flex;
+    justify-content: space-between;
+    border-top: 1px solid rgba(51, 65, 85, 0.4);
+    padding-top: 16px;
+  }
+
+  /* Table of Contents */
+  .toc-container {
+    padding: 8px 0;
+  }
+  .toc-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 5px 0;
+    border-bottom: 1px dotted #cbd5e1;
+    font-size: 8.8pt;
+  }
+  .toc-title {
+    color: #0f172a;
+    font-weight: 500;
+  }
+  .toc-title strong {
+    color: #0369a1;
+    margin-right: 6px;
+  }
+  .toc-dots {
+    flex-grow: 1;
+    border-bottom: 1px dotted #cbd5e1;
+    margin: 0 8px;
+  }
+  .toc-page {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+    color: #64748b;
+  }
+
+  /* Figures & Screenshots */
+  .figure-box {
+    margin: 10px 0;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #f8fafc;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+  .figure-img {
+    width: 100%;
+    display: block;
+    max-height: 190px;
+    object-fit: contain;
+    background: #0b1220;
+  }
+  .figure-caption {
+    font-size: 8pt;
+    color: #475569;
+    padding: 5px 10px;
+    background: #f1f5f9;
+    border-top: 1px solid #e2e8f0;
+    font-weight: 500;
+    text-align: center;
+  }
+
+  /* SVG Diagram styling */
+  .diagram-container {
+    margin: 10px 0;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 10px;
+    background: #f8fafc;
+    text-align: center;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  .footer-ref {
+    font-size: 7.5pt;
+    color: #94a3b8;
+    margin-top: 10px;
+    text-align: center;
+    border-top: 1px solid #e2e8f0;
+    padding-top: 5px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ======================================================================= -->
+<!-- COVER PAGE -->
+<!-- ======================================================================= -->
+<div class="cover-page">
+  <div class="cover-header">
+    <div class="cover-brand">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        <path d="m9 12 2 2 4-4"/>
+      </svg>
+      <span>BugSentinel AI</span>
+    </div>
+    <div class="cover-title">Comprehensive Project Report, Technical Architecture, and User Manual</div>
+    <div class="cover-subtitle">
+      An AI-Assisted Web Application Testing and Evidence-Based Bug Verification Platform
+    </div>
+    <div class="cover-pill">Documentation Edition 1.0 • System Release v0.1.0</div>
+  </div>
+
+  <div>
+    <div class="cover-meta-grid">
+      <div class="cover-meta-item">
+        <div class="cover-meta-label">Target System</div>
+        <div class="cover-meta-value">BugSentinel AI Autonomous Testing Lab</div>
+      </div>
+      <div class="cover-meta-item">
+        <div class="cover-meta-label">Engineering Team</div>
+        <div class="cover-meta-value">BugSentinel AI Core Engineering & QA Team</div>
+      </div>
+      <div class="cover-meta-item">
+        <div class="cover-meta-label">Primary Technology Stack</div>
+        <div class="cover-meta-value">React 19, FastAPI, Playwright, SQLite, Windows Automation</div>
+      </div>
+      <div class="cover-meta-item">
+        <div class="cover-meta-label">Publication Date</div>
+        <div class="cover-meta-value">October 17, 2026</div>
+      </div>
+      <div class="cover-meta-item">
+        <div class="cover-meta-label">GitHub Repository</div>
+        <div class="cover-meta-value">https://github.com/rahulgoreofficial/BugSentinel-AI</div>
+      </div>
+      <div class="cover-meta-item">
+        <div class="cover-meta-label">Implementation Status</div>
+        <div class="cover-meta-value"><span style="color:#38bdf8; font-weight:700;">Phase 1, Phase 2, & Windows Automation Verified</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cover-footer">
+    <span>Autonomous Web Quality Assurance Platform</span>
+    <span>CONFIDENTIAL & PROPRIETARY — FOR EVALUATION ONLY</span>
+  </div>
+</div>
+
+<!-- ======================================================================= -->
+<!-- TABLE OF CONTENTS -->
+<!-- ======================================================================= -->
+<div class="chapter-page">
+  <div class="chapter-number">Document Index</div>
+  <h1>Table of Contents</h1>
+  <p style="font-size:9pt; color:#64748b; margin-bottom:18px;">
+    This technical manual provides complete end-to-end documentation for BugSentinel AI, covering architecture, full-stack implementation, operational user guides, API specifications, and automated verification suites.
+  </p>
+
+  <div class="toc-container">
+    <div class="toc-row"><div class="toc-title"><strong>Chapter 1</strong> Executive Summary</div><div class="toc-dots"></div><div class="toc-page">Page 3</div></div>
+    <div class="toc-row"><div class="toc-title"><strong>Chapter 2</strong> Problem Statement and Background</div><div class="toc-dots"></div><div class="toc-page">Page 5</div></div>
+    <div class="toc-row"><div class="toc-title"><strong>Chapter 3</strong> Project Objectives and Scope Matrix</div><div class="toc-dots"></div><div class="toc-page">Page 6</div></div>
+    <div class="toc-row"><div class="toc-title"><strong>Chapter 4</strong> Feature-by-Feature Technical Explanation</div><div class="toc-dots"></div><div class="toc-page">Page 7</div></div>
+    <div class="toc-row"><div class="toc-title"><strong>Chapter 5</strong> Complete 6-Stage Autonomous Workflow</div><div class="toc-dots"></div><div class="toc-page">Page 8</div></div>
+    <div class="toc-row"><div class="toc-title"><strong>Chapter 6</strong> User Manual and Operating Guide</div><div class="toc-dots"></div><div class="toc-page">Page 9</div></div>
+    <div class="toc-row"><div class="toc-title"><strong>Chapter 7</strong> Windows Installer and Launcher Guide</div><div class="toc-dots"></div><div class="toc-page">Page 11</div></div>
+    <div class="toc-row"><div class="toc-title"><strong>Chapter 8</strong> Comprehensive Technology Stack</div><div class="toc-dots"></div><div class="toc-page">Page 12</div></div>
+    <div class="toc-row"><div class="toc-title"><strong>Chapter 9</strong> System Architecture & Component Interaction</div><div class="toc-dots"></div><div class="toc-page">Page 13</div></div>
+    <div class="toc-row"><div class="toc-title"><strong>Chapter 10</strong> Internal Modules and Code Organization</div><div class="toc-dots"></div><div class="toc-page">Page 14</div></div>
+    <div class="toc-row"><div class="toc-title"><strong>Chapter 11</strong> Core Engineering Concepts & Principles</div><div class="toc-dots"></div><div class="toc-page">Page 15</div></div>
+    <div class="toc-row"><div class="toc-title"><strong>Chapter 12</strong> Data Flow, Schema & SQLite Persistence</div><div class="toc-dots"></div><div class="toc-page">Page 16</div></div>
+    <div class="toc-row"><div class="toc-title"><strong>Chapter 13</strong> Complete REST API Reference Manual</div><div class="toc-dots"></div><div class="toc-page">Page 17</div></div>
+    <div class="toc-row"><div class="toc-title"><strong>Chapter 14</strong> Automated Testing & Quality Assurance</div><div class="toc-dots"></div><div class="toc-page">Page 18</div></div>
+    <div class="toc-row"><div class="toc-title"><strong>Chapter 15</strong> Comprehensive Troubleshooting Guide</div><div class="toc-dots"></div><div class="toc-page">Page 19</div></div>
+    <div class="toc-row"><div class="toc-title"><strong>Chapter 16</strong> Security, Privacy & Safety Boundaries</div><div class="toc-dots"></div><div class="toc-page">Page 20</div></div>
+    <div class="toc-row"><div class="toc-title"><strong>Chapter 17</strong> System Limitations and Future Roadmap</div><div class="toc-dots"></div><div class="toc-page">Page 21</div></div>
+    <div class="toc-row"><div class="toc-title"><strong>Chapter 18</strong> Technical Glossary of Terms</div><div class="toc-dots"></div><div class="toc-page">Page 22</div></div>
+    <div class="toc-row"><div class="toc-title"><strong>Chapter 19</strong> Quick-Start Reference Cheat Sheet</div><div class="toc-dots"></div><div class="toc-page">Page 23</div></div>
+  </div>
+
+  <div class="callout" style="margin-top:24px;">
+    <div class="callout-title">Document Scope & Factual Precision Notice</div>
+    This report documents the actual implemented software repository. All cited API endpoints, database schemas, PowerShell scripts, Playwright selectors, and test statistics reflect observed, passing code in the workspace. Hypothetical or unverified capabilities are explicitly distinguished.
+  </div>
+</div>
+
+<!-- ======================================================================= -->
+<!-- CHAPTER 1: EXECUTIVE SUMMARY -->
+<!-- ======================================================================= -->
+<div class="chapter-page">
+  <div class="chapter-number">Chapter 1</div>
+  <h1>Executive Summary</h1>
+
+  <h2>1.1 What is BugSentinel AI?</h2>
+  <p>
+    <strong>BugSentinel AI</strong> is an autonomous web application testing and evidence-based bug verification platform. Designed for modern agile software development teams, QA engineers, and full-stack developers, BugSentinel AI bridges the critical gap between traditional automated test runners and actionable bug triage.
+  </p>
+  <p>
+    Traditional browser testing frameworks (such as Jest, Cypress, or raw Selenium scripts) routinely inform developers that a test has failed with cryptic stack traces or timeout exceptions. However, they routinely fail to answer the three fundamental questions required for rapid debugging:
+  </p>
+  <ul>
+    <li><strong>Is the failure reproducible, or is it an intermittent network/timing glitch (flaky test)?</strong></li>
+    <li><strong>What was the exact visual and operational state of the DOM when the assertion failed?</strong></li>
+    <li><strong>What were the browser console logs, network responses, and synthetic user inputs that triggered the defect?</strong></li>
+  </ul>
+  <p>
+    BugSentinel AI resolves this challenge through an autonomous 6-stage testing engine (<strong>Plan, Explore, Execute, Verify, Report, Regress</strong>). Rather than terminating immediately upon encountering an assertion mismatch, the system captures immediate high-resolution screenshot evidence, collects browser console logs, and automatically initiates a bounded second attempt under identical environmental parameters.
+  </p>
+
+  <div class="callout success">
+    <div class="callout-title">The BugSentinel AI Core Philosophy</div>
+    <em>"Don't just report that a test failed. Prove the failure, verify unexpected behavior, collect immutable visual and log evidence, and give developers everything they need to fix the bug on the first attempt."</em>
+  </div>
+
+  <h2>1.2 One-Minute Summary for Stakeholders & Judges</h2>
+  <p>
+    In approximately sixty seconds, a developer or hackathon evaluator can understand BugSentinel AI's core value:
+  </p>
+  <ul>
+    <li><strong>Zero-Config Double-Click Deployment:</strong> A user unzips the project on Windows and double-clicks <code>Install_BugSentinelAI.bat</code>. The automated installer checks runtimes (Python 3.11+, Node 18+), bootstraps missing prerequisites via <code>winget</code>, creates a project-local virtual environment, installs backend and frontend packages, downloads Playwright Chromium, compiles the frontend bundle, and verifies 25 backend unit and integration tests.</li>
+    <li><strong>One-Click Full-Stack Launcher:</strong> Double-clicking <code>Start_BugSentinelAI.bat</code> initializes the FastAPI backend and Vite React 19 frontend simultaneously, performs bounded HTTP health checks against <code>/api/health</code> and port 5173, and launches the operational dashboard in the user's default browser with zero manual terminal interaction.</li>
+    <li><strong>Controlled Test Target (ShopDemo):</strong> The platform mounts an accessible, realistic e-commerce application under test (<code>/demo/</code>) containing a deliberate, documented checkout bug: submitting an invalid email address (<code>not-an-email</code>) bypasses regex validation and erroneously triggers an order confirmation.</li>
+    <li><strong>Deterministic Autonomous Verification:</strong> When the test scenario runs, BugSentinel AI detects that the order was placed despite invalid data. Attempt 1 captures a screenshot and fails. Attempt 2 immediately verifies the condition. Because both attempts fail identically, the verifier classifies the defect as a confirmed <code>REPRODUCIBLE_FAILURE</code> (Medium Severity) and persists a structured finding with side-by-side expected vs. actual behavior.</li>
+    <li><strong>Targeted Regression Retesting:</strong> Once the bug is corrected in the source code, clicking <em>"Run Regression Retest"</em> in the UI executes only the defective scenario, confirms the fix, and automatically updates the audit record with <code>defect_resolved: true</code>.</li>
+  </ul>
+
+  <h2>1.3 Current Implementation Status</h2>
+  <p>
+    BugSentinel AI has been engineered through two complete phases of rigorous development and verified under automated test suites:
+  </p>
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 25%;">Subsystem</th>
+        <th style="width: 20%;">Implementation Status</th>
+        <th style="width: 55%;">Verified Technical Deliverables</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Backend Engine</strong></td>
+        <td><span class="badge badge-verified">VERIFIED</span></td>
+        <td>FastAPI 0.143, Pydantic v2 schemas, SQLite persistence, Playwright Chromium automation engine, Verifier retry logic, Report & Regression services.</td>
+      </tr>
+      <tr>
+        <td><strong>Frontend Dashboard</strong></td>
+        <td><span class="badge badge-verified">VERIFIED</span></td>
+        <td>React 19, TypeScript 5.9, Vite 8.3, Design Token System (<code>tokens.css</code>), Asymmetric Bento Grid, Findings Drawer, Screenshot Zoom Modal.</td>
+      </tr>
+      <tr>
+        <td><strong>Windows Automation</strong></td>
+        <td><span class="badge badge-verified">VERIFIED</span></td>
+        <td><code>Install_BugSentinelAI.bat</code>, <code>Start_BugSentinelAI.bat</code>, <code>Stop_BugSentinelAI.bat</code>, PowerShell helpers, duplicate launch protection, PID isolation.</td>
+      </tr>
+      <tr>
+        <td><strong>Test Suite</strong></td>
+        <td><span class="badge badge-verified">VERIFIED</span></td>
+        <td>25/25 automated pytest tests passing in 8.78s; <code>oxlint</code> 0 errors / 0 warnings; TypeScript clean production build in 209ms.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ======================================================================= -->
+<!-- CHAPTER 2: PROBLEM STATEMENT AND BACKGROUND -->
+<!-- ======================================================================= -->
+<div class="chapter-page">
+  <div class="chapter-number">Chapter 2</div>
+  <h1>Problem Statement and Background</h1>
+
+  <h2>2.1 The Crisis in Automated Web QA</h2>
+  <p>
+    Modern web applications undergo dozens of continuous integration deployments per week. While automated testing is universally acknowledged as a prerequisite for software reliability, QA automation in practice is plagued by persistent operational friction:
+  </p>
+
+  <h3>A. The Flaky Test Epidemic</h3>
+  <p>
+    An alarming percentage of automated UI tests fail intermittently due to network jitter, dynamic DOM animation delays, third-party script latency, or CPU throttling rather than legitimate software defects. When a test fails once and passes on a manual re-run, developers quickly learn to distrust the automated suite—a cognitive failure mode known as "alert fatigue." Legitimate bugs that happen to manifest intermittently are dismissed as flakiness and slip into production.
+  </p>
+
+  <h3>B. Lack of Structured Diagnostic Evidence</h3>
+  <p>
+    When a conventional CI test fails, the output provided to the developer typically consists of an assertion error message:
+  </p>
+  <pre><code>AssertionError: Expected element '#status' to contain text 'Invalid email' but found 'Order placed successfully'
+    at Page.waitForSelector (tests/checkout.spec.ts:42:15)</code></pre>
+  <p>
+    This stack trace tells the developer <em>where</em> the test failed, but offers zero insight into <em>why</em>. Was the form submitted? What inputs were actually typed into the input fields? Did a JavaScript syntax error occur in the browser console? What did the screen look like? To diagnose the issue, the developer must stop their current task, manually clone the branch, set up local databases, spin up mock servers, and manually re-enact the user workflow.
+  </p>
+
+  <h3>C. Environment and Dependency Onboarding Friction</h3>
+  <p>
+    Setting up full-stack browser testing environments on Windows developer workstations is notoriously error-prone. A typical setup requires matching Python virtual environments, Node.js runtimes, package manager variations (npm vs yarn vs pnpm), Playwright browser binary downloads (which require separate CLI invocations), and multiple concurrent terminal sessions (one for Uvicorn, one for Vite). A single missing environment variable or mismatched port causes the entire stack to fail silently.
+  </p>
+
+  <h2>2.2 Realistic Industry Scenario</h2>
+  <p>
+    Consider an e-commerce checkout flow. An engineer refactors the client-side form validation to support international phone numbers. During the refactor, a conditional check in the email validation handler is inadvertently inverted. The checkout button now submits the form even when the email regex returns false.
+  </p>
+  <p>
+    Under traditional QA, a nightly script flags a failure: <code>TimeoutError: locator.waitFor: Timeout 10000ms exceeded</code>. The developer reviews the log in the morning, assumes the test runner timed out due to slow CI workers, reruns the job, and merges the pull request. In production, thousands of orders are created with corrupt customer contact details, resulting in undeliverable shipments and customer support escalations.
+  </p>
+  <p>
+    Under <strong>BugSentinel AI</strong>, the workflow is radically different:
+  </p>
+  <ol>
+    <li>The test scenario <code>invalid_email_is_rejected</code> executes against the target DOM.</li>
+    <li>Playwright inputs <code>not-an-email</code>, clicks Place Order, and asserts that the success confirmation <code>#status</code> element is absent.</li>
+    <li>The confirmation element appears. The assertion fails. Playwright immediately captures a 1280x720 screenshot: <code>invalid_email_is_rejected_attempt_1.png</code>.</li>
+    <li>The Verifier launches Attempt 2 immediately. Attempt 2 fails identically, capturing <code>attempt_2.png</code>.</li>
+    <li>The Verifier classifies the issue not as a timeout or flake, but as a confirmed <strong><code>REPRODUCIBLE_FAILURE</code></strong>.</li>
+    <li>The finding is automatically logged with severity <code>MEDIUM</code>, linking expected behavior (<em>"Form rejects invalid email and shows validation error"</em>) against actual behavior (<em>"Order placed successfully! Order #ORD-849201 confirmed for BugHunter QA"</em>), complete with full console telemetry and clickable screenshots.</li>
+  </ol>
+</div>
+
+<!-- ======================================================================= -->
+<!-- CHAPTER 3: PROJECT OBJECTIVES AND SCOPE -->
+<!-- ======================================================================= -->
+<div class="chapter-page">
+  <div class="chapter-number">Chapter 3</div>
+  <h1>Project Objectives and Scope</h1>
+
+  <h2>3.1 Core Objectives</h2>
+  <p>
+    The BugSentinel AI platform was engineered to satisfy four foundational objectives:
+  </p>
+  <ol>
+    <li><strong>Deterministic Browser Execution:</strong> Replace brittle, randomized testing with rigorous, locator-safe Playwright Chromium automation capable of interacting with real HTML5 web applications.</li>
+    <li><strong>Autonomous Bounded Verification:</strong> Eliminate human guesswork by programmatically differentiating intermittent timing glitches (flaky tests) from true application regressions through automated multi-attempt verification.</li>
+    <li><strong>Rich Visual & Telemetric Evidence:</strong> Persist visual screenshots, browser console logs, and execution timelines in local SQLite storage and an accessible filesystem artifact hierarchy.</li>
+    <li><strong>Zero-Friction Windows Deployment:</strong> Provide native Windows batch files and PowerShell helpers enabling automated, one-click installation and dual-process orchestration.</li>
+  </ol>
+
+  <h2>3.2 Implementation Scope Matrix</h2>
+  <p>
+    To maintain complete technical credibility, the following table distinguishes features that are fully implemented and verified in the current codebase from those that are partially implemented or planned for future development:
+  </p>
+
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 25%;">Capability / Feature</th>
+        <th style="width: 15%;">Status</th>
+        <th style="width: 35%;">Current Implementation Details</th>
+        <th style="width: 25%;">Scope Boundary & Limits</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Deterministic Test Scenarios</strong></td>
+        <td><span class="badge badge-verified">IMPLEMENTED</span></td>
+        <td>3 scenarios defined in <code>planner.py</code>: Homepage Smoke, Valid Checkout, and Invalid Email Rejection.</td>
+        <td>Restricted to pre-registered scenarios for authorized targets.</td>
+      </tr>
+      <tr>
+        <td><strong>Playwright Browser Engine</strong></td>
+        <td><span class="badge badge-verified">IMPLEMENTED</span></td>
+        <td>Headless Chromium automation, explicit selector waiting, DOM value population, screenshot capture on failure.</td>
+        <td>Chromium only; WebKit and Firefox not installed by default.</td>
+      </tr>
+      <tr>
+        <td><strong>Bounded Verification Retry</strong></td>
+        <td><span class="badge badge-verified">IMPLEMENTED</span></td>
+        <td>Max 2 attempts. Classifies outcomes into <code>PASS</code>, <code>REPRODUCIBLE_FAILURE</code>, <code>POTENTIALLY_FLAKY</code>, and <code>ERROR</code>.</td>
+        <td>Fixed bounded retry limit (2 attempts); configurable via API.</td>
+      </tr>
+      <tr>
+        <td><strong>Evidence Capture & Storage</strong></td>
+        <td><span class="badge badge-verified">IMPLEMENTED</span></td>
+        <td>Full-page PNG screenshots per attempt, execution logs, browser console message aggregation.</td>
+        <td>Local disk storage in <code>data/artifacts/run_id/</code>; no cloud S3.</td>
+      </tr>
+      <tr>
+        <td><strong>SQLite Run Persistence</strong></td>
+        <td><span class="badge badge-verified">IMPLEMENTED</span></td>
+        <td>Tables <code>runs</code> and <code>findings</code> with JSON serialization, foreign keys, and indexed queries.</td>
+        <td>Local SQLite file; concurrency managed via timeout locking.</td>
+      </tr>
+      <tr>
+        <td><strong>One-Click Regression Retest</strong></td>
+        <td><span class="badge badge-verified">IMPLEMENTED</span></td>
+        <td><code>POST /api/v1/findings/{id}/regression</code> reruns specific scenario and flags <code>defect_resolved</code>.</td>
+        <td>Reruns against currently live target code.</td>
+      </tr>
+      <tr>
+        <td><strong>Full-Stack Operational UI</strong></td>
+        <td><span class="badge badge-verified">IMPLEMENTED</span></td>
+        <td>React 19 + TypeScript dashboard with live telemetry ribbon, scenario runner, findings drawer, screenshot zoom modal.</td>
+        <td>Hash-based routing (<code>/#dashboard</code>); responsive down to 320px.</td>
+      </tr>
+      <tr>
+        <td><strong>Windows One-Click Setup</strong></td>
+        <td><span class="badge badge-verified">IMPLEMENTED</span></td>
+        <td><code>Install_BugSentinelAI.bat</code> + PowerShell helper with runtime bootstrap via <code>winget</code>, venv, build & tests.</td>
+        <td>Windows 10/11 x64 architecture.</td>
+      </tr>
+      <tr>
+        <td><strong>Dual-Process Launcher</strong></td>
+        <td><span class="badge badge-verified">IMPLEMENTED</span></td>
+        <td><code>Start_BugSentinelAI.bat</code> starts Uvicorn & Vite, polls HTTP readiness, detects duplicates, opens browser.</td>
+        <td>Tracks process PIDs in <code>data/runtime/processes.json</code>.</td>
+      </tr>
+      <tr>
+        <td><strong>AI Autonomous Planning</strong></td>
+        <td><span class="badge badge-planned">PLANNED</span></td>
+        <td>Current architecture uses deterministic scenario registry in <code>planner.py</code>. LLM planning module is architecturally defined.</td>
+        <td>Autonomous DOM crawling and LLM test generation planned for v2.0.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ======================================================================= -->
+<!-- CHAPTER 4: FEATURE-BY-FEATURE EXPLANATION -->
+<!-- ======================================================================= -->
+<div class="chapter-page">
+  <div class="chapter-number">Chapter 4</div>
+  <h1>Feature-by-Feature Technical Explanation</h1>
+
+  <h2>4.1 Structured Test Planning (`planner.py`)</h2>
+  <p>
+    <strong>Purpose:</strong> Validates scenario execution requests, prevents arbitrary command injection, and guarantees that synthetic user workflows adhere to strict contract specifications.
+  </p>
+  <ul>
+    <li><strong>Input:</strong> Target identifier (e.g., <code>"shopdemo"</code>) and an optional array of scenario IDs.</li>
+    <li><strong>Processing:</strong> Validates scenario identifiers against an internal registry dictionary. Unknown IDs trigger an immediate HTTP 400 Bad Request error. Default scenarios are resolved when none are explicitly provided.</li>
+    <li><strong>Output:</strong> A validated list of <code>ScenarioDefinition</code> Pydantic models containing titles, categories, and expected behavior descriptions.</li>
+    <li><strong>Related Modules:</strong> <code>backend.app.services.planner</code>, <code>backend.app.api.routes_scenarios</code>.</li>
+  </ul>
+
+  <h2>4.2 Headless Browser Automation (`browser_engine.py`)</h2>
+  <p>
+    <strong>Purpose:</strong> Drives a real, headless Playwright Chromium instance to execute DOM interactions, form submissions, and assertion verifications.
+  </p>
+  <ul>
+    <li><strong>Input:</strong> Scenario ID, target URL (e.g., <code>http://127.0.0.1:8000/demo/</code>), run ID, attempt index, and target artifacts directory.</li>
+    <li><strong>Processing:</strong> Launches a fresh browser context and page. Listens for <code>page.on("console")</code> to capture client-side JavaScript warnings and errors. Navigates to the target, waits for network idle, selects input elements via stable selectors (<code>#customer-name</code>, <code>#email</code>, <code>#address</code>), fills values, clicks <code>#place-order</code>, and captures full-page PNG screenshots if assertions fail.</li>
+    <li><strong>Output:</strong> A <code>ScenarioAttempt</code> object recording duration in milliseconds, final test status (<code>PASS</code>, <code>FAIL</code>, or <code>ERROR</code>), error message, screenshot relative URL, and console log lines.</li>
+  </ul>
+
+  <h2>4.3 Bounded Failure Verification & Flakiness Classification (`verifier.py`)</h2>
+  <p>
+    <strong>Purpose:</strong> Eliminates false positives by determining whether a failing assertion is repeatable or intermittent.
+  </p>
+  <ul>
+    <li><strong>Processing:</strong> If Attempt 1 returns <code>FAIL</code>, the Verifier logs an informational notice and immediately initiates Attempt 2 under fresh browser context isolation.</li>
+    <li><strong>Classification Rules:</strong>
+      <ul>
+        <li><code>Attempt 1: PASS</code> ➔ Status: <code>PASS</code> (Classification: <code>None</code>).</li>
+        <li><code>Attempt 1: FAIL + Attempt 2: FAIL</code> ➔ Status: <code>FAIL</code> (Classification: <code>REPRODUCIBLE_FAILURE</code>).</li>
+        <li><code>Attempt 1: FAIL + Attempt 2: PASS</code> ➔ Status: <code>FAIL</code> (Classification: <code>POTENTIALLY_FLAKY</code>).</li>
+        <li><code>Attempt 1: ERROR</code> ➔ Status: <code>ERROR</code> (Classification: <code>ERROR</code>).</li>
+      </ul>
+    </li>
+  </ul>
+
+  <h2>4.4 Structured Findings & Evidence Packaging (`report_service.py`)</h2>
+  <p>
+    <strong>Purpose:</strong> Packages test results into structured bug reports containing actionable developer intelligence.
+  </p>
+  <ul>
+    <li><strong>Processing:</strong> Filters completed scenarios for those classified as <code>REPRODUCIBLE_FAILURE</code> or <code>POTENTIALLY_FLAKY</code>. Generates a unique finding ID (<code>fnd_xxxxxxxx</code>), assigns rational business severity (Critical for checkout outage, Medium for validation bug, Low for flakiness), links the primary screenshot artifact, combines logs across attempts, and writes an <code>execution.log</code> file in <code>data/artifacts/run_id/</code>.</li>
+    <li><strong>Output:</strong> Array of <code>FindingResponse</code> Pydantic models.</li>
+  </ul>
+
+  <h2>4.5 Targeted Regression Verification (`regression_service.py`)</h2>
+  <p>
+    <strong>Purpose:</strong> Enables one-click verification of bug fixes without executing unrelated tests.
+  </p>
+  <ul>
+    <li><strong>Processing:</strong> Looks up the original finding by ID in SQLite, extracts the associated scenario ID, triggers a fresh test run scoped exclusively to that scenario, and evaluates whether the new run achieved 100% pass rate.</li>
+    <li><strong>Output:</strong> A <code>RegressionResponse</code> indicating <code>defect_resolved: true/false</code> and detailed run metrics.</li>
+  </ul>
+</div>
+
+<!-- ======================================================================= -->
+<!-- CHAPTER 5: COMPLETE WORKFLOW -->
+<!-- ======================================================================= -->
+<div class="chapter-page">
+  <div class="chapter-number">Chapter 5</div>
+  <h1>Complete 6-Stage Autonomous Workflow</h1>
+
+  <h2>5.1 The Workflow Pipeline</h2>
+  <p>
+    BugSentinel AI structures every test execution through a strict 6-stage lifecycle. Each stage has defined inputs, execution boundaries, and outputs:
+  </p>
+
+  <div class="diagram-container">
+    <svg width="600" height="160" viewBox="0 0 600 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Stage 1: PLAN -->
+      <rect x="5" y="25" width="85" height="95" rx="8" fill="#0f172a" stroke="#0284c7" stroke-width="2"/>
+      <text x="47" y="52" fill="#38bdf8" font-family="Outfit, sans-serif" font-weight="700" font-size="11" text-anchor="middle">1. PLAN</text>
+      <text x="47" y="72" fill="#94a3b8" font-family="Inter, sans-serif" font-size="8" text-anchor="middle">Validate ID</text>
+      <text x="47" y="86" fill="#94a3b8" font-family="Inter, sans-serif" font-size="8" text-anchor="middle">Target Check</text>
+      <text x="47" y="102" fill="#38bdf8" font-family="JetBrains Mono, monospace" font-size="7.5" text-anchor="middle">planner.py</text>
+
+      <!-- Arrow 1-2 -->
+      <path d="M90 72 H105" stroke="#38bdf8" stroke-width="2"/>
+
+      <!-- Stage 2: EXPLORE -->
+      <rect x="105" y="25" width="85" height="95" rx="8" fill="#0f172a" stroke="#0284c7" stroke-width="2"/>
+      <text x="147" y="52" fill="#38bdf8" font-family="Outfit, sans-serif" font-weight="700" font-size="11" text-anchor="middle">2. EXPLORE</text>
+      <text x="147" y="72" fill="#94a3b8" font-family="Inter, sans-serif" font-size="8" text-anchor="middle">Locate DOM</text>
+      <text x="147" y="86" fill="#94a3b8" font-family="Inter, sans-serif" font-size="8" text-anchor="middle">DOM Ready</text>
+      <text x="147" y="102" fill="#38bdf8" font-family="JetBrains Mono, monospace" font-size="7.5" text-anchor="middle">playwright</text>
+
+      <!-- Arrow 2-3 -->
+      <path d="M190 72 H205" stroke="#38bdf8" stroke-width="2"/>
+
+      <!-- Stage 3: EXECUTE -->
+      <rect x="205" y="25" width="85" height="95" rx="8" fill="#0f172a" stroke="#0284c7" stroke-width="2"/>
+      <text x="247" y="52" fill="#38bdf8" font-family="Outfit, sans-serif" font-weight="700" font-size="11" text-anchor="middle">3. EXECUTE</text>
+      <text x="247" y="72" fill="#94a3b8" font-family="Inter, sans-serif" font-size="8" text-anchor="middle">Synthetic Input</text>
+      <text x="247" y="86" fill="#94a3b8" font-family="Inter, sans-serif" font-size="8" text-anchor="middle">Form Submit</text>
+      <text x="247" y="102" fill="#38bdf8" font-family="JetBrains Mono, monospace" font-size="7.5" text-anchor="middle">Attempt 1</text>
+
+      <!-- Arrow 3-4 -->
+      <path d="M290 72 H305" stroke="#38bdf8" stroke-width="2"/>
+
+      <!-- Stage 4: VERIFY -->
+      <rect x="305" y="25" width="85" height="95" rx="8" fill="#0f172a" stroke="#f59e0b" stroke-width="2"/>
+      <text x="347" y="52" fill="#fbbf24" font-family="Outfit, sans-serif" font-weight="700" font-size="11" text-anchor="middle">4. VERIFY</text>
+      <text x="347" y="72" fill="#94a3b8" font-family="Inter, sans-serif" font-size="8" text-anchor="middle">Bounded Retry</text>
+      <text x="347" y="86" fill="#94a3b8" font-family="Inter, sans-serif" font-size="8" text-anchor="middle">Flake Filter</text>
+      <text x="347" y="102" fill="#fbbf24" font-family="JetBrains Mono, monospace" font-size="7.5" text-anchor="middle">verifier.py</text>
+
+      <!-- Arrow 4-5 -->
+      <path d="M390 72 H405" stroke="#38bdf8" stroke-width="2"/>
+
+      <!-- Stage 5: REPORT -->
+      <rect x="405" y="25" width="85" height="95" rx="8" fill="#0f172a" stroke="#10b981" stroke-width="2"/>
+      <text x="447" y="52" fill="#34d399" font-family="Outfit, sans-serif" font-weight="700" font-size="11" text-anchor="middle">5. REPORT</text>
+      <text x="447" y="72" fill="#94a3b8" font-family="Inter, sans-serif" font-size="8" text-anchor="middle">Screenshots</text>
+      <text x="447" y="86" fill="#94a3b8" font-family="Inter, sans-serif" font-size="8" text-anchor="middle">Console Logs</text>
+      <text x="447" y="102" fill="#34d399" font-family="JetBrains Mono, monospace" font-size="7.5" text-anchor="middle">SQLite Save</text>
+
+      <!-- Arrow 5-6 -->
+      <path d="M490 72 H505" stroke="#38bdf8" stroke-width="2"/>
+
+      <!-- Stage 6: REGRESS -->
+      <rect x="505" y="25" width="85" height="95" rx="8" fill="#0f172a" stroke="#818cf8" stroke-width="2"/>
+      <text x="547" y="52" fill="#a5b4fc" font-family="Outfit, sans-serif" font-weight="700" font-size="11" text-anchor="middle">6. REGRESS</text>
+      <text x="547" y="72" fill="#94a3b8" font-family="Inter, sans-serif" font-size="8" text-anchor="middle">Fix Applied</text>
+      <text x="547" y="86" fill="#94a3b8" font-family="Inter, sans-serif" font-size="8" text-anchor="middle">Retest Finding</text>
+      <text x="547" y="102" fill="#a5b4fc" font-family="JetBrains Mono, monospace" font-size="7.5" text-anchor="middle">Resolved: OK</text>
+    </svg>
+    <div class="figure-caption">Figure 5.1: The BugSentinel AI 6-Stage Autonomous Verification Pipeline.</div>
+  </div>
+
+  <h2>5.2 Detailed Stage Breakdown</h2>
+  <ul>
+    <li><strong>Stage 1 (Plan):</strong> The orchestrator receives <code>RunCreateRequest</code>. It validates that the requested <code>target_id</code> exists in the allowlist (<code>shopdemo</code>). It queries <code>planner.py</code> to ensure all scenario IDs exist. A unique Run ID (<code>run_xxxxxxxx</code>) is created.</li>
+    <li><strong>Stage 2 (Explore):</strong> The headless browser navigates to the target URL. It verifies that the DOM is fully loaded and resolves stable selector targets (<code>#customer-name</code>, <code>#email</code>, <code>#address</code>, <code>#place-order</code>).</li>
+    <li><strong>Stage 3 (Execute):</strong> Synthetic user data is injected into form inputs. Playwright dispatches real click events and waits for DOM mutation updates on the status element.</li>
+    <li><strong>Stage 4 (Verify):</strong> If an assertion fails, the Verifier captures screenshot 1 and triggers an immediate Attempt 2 retry. If Attempt 2 also fails, it records a verified <code>REPRODUCIBLE_FAILURE</code>. If Attempt 2 passes, it records <code>POTENTIALLY_FLAKY</code>.</li>
+    <li><strong>Stage 5 (Report):</strong> Findings are assembled with severity levels, expected vs. actual text, and console log lines. The run record and findings are stored in SQLite (<code>data/bugsentinel.sqlite3</code>).</li>
+    <li><strong>Stage 6 (Regress):</strong> Once the source code has been patched, the user triggers <code>POST /api/v1/findings/{id}/regression</code>. The scenario re-executes, confirming that the assertion now passes cleanly and closing the defect audit trail.</li>
+  </ul>
+</div>
+
+<!-- ======================================================================= -->
+<!-- CHAPTER 6: USER MANUAL AND OPERATING GUIDE -->
+<!-- ======================================================================= -->
+<div class="chapter-page">
+  <div class="chapter-number">Chapter 6</div>
+  <h1>User Manual and Operating Guide</h1>
+
+  <h2>6.1 System Prerequisites</h2>
+  <p>To run BugSentinel AI on Windows, ensure the host machine meets the following baseline requirements:</p>
+  <ul>
+    <li><strong>Operating System:</strong> Windows 10 (Build 19041+) or Windows 11 (64-bit).</li>
+    <li><strong>Python Environment:</strong> Python 3.11, 3.12, 3.13, or 3.14.</li>
+    <li><strong>Node.js Environment:</strong> Node.js 18.x, 20.x, 22.x, or 24.x LTS with <code>npm</code>.</li>
+    <li><strong>Browser Engine:</strong> Playwright Chromium (automatically provisioned by the installer).</li>
+    <li><strong>Storage:</strong> Minimum 1.5 GB available disk space for Python virtual environment, Node modules, and Playwright browser binaries.</li>
+  </ul>
+
+  <h2>6.2 Step-by-Step Operational Instructions</h2>
+
+  <h3>Step 1: First-Time Automated Installation</h3>
+  <p>
+    Extract the repository ZIP to any location on your drive (paths containing spaces such as <code>D:\Hackathon Projects\BugSentinelAI</code> are fully supported).
+    Open Windows Explorer, locate <strong><code>Install_BugSentinelAI.bat</code></strong>, and double-click it.
+  </p>
+  <p>
+    The script executes a 7-step provisioning sequence:
+  </p>
+  <pre><code>[1/7] Checking system requirements and runtime environments...
+[2/7] Preparing project-local Python virtual environment (.venv)...
+[3/7] Installing Python backend dependencies from requirements.txt...
+[4/7] Installing React / Vite frontend dependencies...
+[5/7] Installing Playwright Chromium browser automation engine...
+[6/7] Compiling frontend production bundle (Vite + TypeScript)...
+[7/7] Verifying backend test suite and recording installation state...</code></pre>
+  <p>
+    Once all 7 steps report <code>[OK]</code>, the installer writes <code>data/installation-state.json</code> and informs you that installation is complete.
+  </p>
+
+  <h3>Step 2: Starting the Full-Stack Application</h3>
+  <p>
+    Double-click <strong><code>Start_BugSentinelAI.bat</code></strong>.
+  </p>
+  <p>
+    The launcher checks for port conflicts, starts the FastAPI backend (port 8000), starts the Vite React frontend (port 5173), polls both services until HTTP 200 OK is received, and automatically launches your default browser to <strong><code>http://127.0.0.1:5173/#dashboard</code></strong>.
+  </p>
+
+  <div class="figure-box">
+    <img src="../assets/dashboard.png" class="figure-img" alt="BugSentinel AI Operational Dashboard">
+    <div class="figure-caption">Figure 6.1: The BugSentinel AI Testing Lab Workspace with Live Telemetry Ribbon and Scenario Trigger.</div>
+  </div>
+
+  <h3>Step 3: Executing Test Runs</h3>
+  <ol>
+    <li>On the Testing Lab dashboard, locate the <strong>Scenario Selection</strong> panel.</li>
+    <li>By default, all 3 scenarios are selected:
+      <ul>
+        <li><code>homepage_loads</code>: Verifies store navigation and catalog rendering.</li>
+        <li><code>valid_checkout_succeeds</code>: Validates successful checkout with correct data.</li>
+        <li><code>invalid_email_is_rejected</code>: Asserts that invalid email addresses are rejected.</li>
+      </ul>
+    </li>
+    <li>Ensure the toggle <strong>"Verify Failures (Immediate Retest)"</strong> is enabled.</li>
+    <li>Click the cyan button: <strong>"Run BugSentinel Scenarios"</strong>.</li>
+    <li>The execution engine starts in the background. Within 3–5 seconds, the results stream into the table.</li>
+  </ol>
+
+  <h3>Step 4: Inspecting Bug Findings & Screenshot Evidence</h3>
+  <p>
+    Upon completion of the run, the <strong>Execution Metrics</strong> ribbon updates:
+    <code>Total: 3 | Passed: 2 | Failed: 1 | Reproducible: 1</code>.
+  </p>
+  <p>
+    Click on the failed row (or the <strong>Findings Drawer</strong> toggle on the right). The inspection drawer slides open displaying:
+  </p>
+  <ul>
+    <li><strong>Defect Title:</strong> <em>"Email Validation Bypass on Checkout"</em>.</li>
+    <li><strong>Classification Badge:</strong> <span class="badge badge-critical">REPRODUCIBLE_FAILURE</span>.</li>
+    <li><strong>Expected Behavior:</strong> <em>"Checkout rejects the invalid email and does NOT display a success message."</em></li>
+    <li><strong>Actual Behavior:</strong> <em>"Order placed successfully! Order #ORD-XXXXXX confirmed for BugHunter QA (not-an-email)."</em></li>
+    <li><strong>Attempt History:</strong> Shows both Attempt 1 and Attempt 2 durations and failure outcomes.</li>
+    <li><strong>Visual Evidence:</strong> High-resolution screenshot captured by Chromium at the exact moment of failure. Clicking the thumbnail opens the <strong>Fullscreen Screenshot Modal</strong>.</li>
+  </ul>
+
+  <div class="figure-box">
+    <img src="../assets/defect_evidence.png" class="figure-img" alt="Playwright Defect Evidence Screenshot">
+    <div class="figure-caption">Figure 6.2: Real Playwright Chromium Screenshot Evidence Capturing the Deliberate Email Validation Bypass.</div>
+  </div>
+
+  <h3>Step 5: Testing the Defect Fix and Regression Retest</h3>
+  <p>
+    To verify the end-to-end regression workflow:
+  </p>
+  <ol>
+    <li>Open <code>backend/demo_site/app.js</code> in any text editor.</li>
+    <li>Locate line 11:
+      <pre><code>// Toggle deliberate defect:
+window.ENABLE_EMAIL_VALIDATION_DEFECT = true; // <-- Change to false</code></pre>
+    </li>
+    <li>Save the file.</li>
+    <li>In the BugSentinel AI dashboard drawer, click <strong>"Run Regression Retest"</strong>.</li>
+    <li>BugSentinel AI immediately reruns only the <code>invalid_email_is_rejected</code> scenario. The form now displays <em>"Please enter a valid email address."</em></li>
+    <li>The regression test passes. The finding updates to <span class="badge badge-verified">DEFECT RESOLVED</span> and logs the confirmation in SQLite.</li>
+  </ol>
+
+  <h3>Step 6: Stopping the Application</h3>
+  <p>
+    To shut down services cleanly:
+  </p>
+  <ul>
+    <li>Press <code>Ctrl+C</code> in the active launcher command prompt window, OR</li>
+    <li>Double-click <strong><code>Stop_BugSentinelAI.bat</code></strong>.</li>
+  </ul>
+  <p>
+    The script reads <code>data/runtime/processes.json</code> and terminates only the specific backend and frontend processes recorded at launch, ensuring zero orphan processes and releasing ports 8000 and 5173.
+  </p>
+</div>
+
+<!-- ======================================================================= -->
+<!-- CHAPTER 7: INSTALLER AND LAUNCHER GUIDE -->
+<!-- ======================================================================= -->
+<div class="chapter-page">
+  <div class="chapter-number">Chapter 7</div>
+  <h1>Windows Installer and Launcher Guide</h1>
+
+  <h2>7.1 Architectural Design for Windows Automation</h2>
+  <p>
+    A primary engineering requirement for BugSentinel AI was creating a dependable, double-clickable Windows deployment experience. Non-technical users, evaluators, and judges must not be forced to manually configure Python virtual environments, debug PATH collisions, or juggle multiple terminal windows.
+  </p>
+  <p>
+    The Windows automation architecture uses small <code>.bat</code> batch files as double-clickable entry points in Windows Explorer, paired with robust PowerShell helpers (<code>scripts/windows/*.ps1</code>) that implement process isolation, execution policy management, and comprehensive logging.
+  </p>
+
+  <h2>7.2 Script Specifications</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 28%;">Script Entrypoint</th>
+        <th style="width: 22%;">Helper Script</th>
+        <th style="width: 25%;">Primary Operations</th>
+        <th style="width: 25%;">Log Output</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>Install_BugSentinelAI.bat</code></td>
+        <td><code>scripts/windows/Install-BugSentinelAI.ps1</code></td>
+        <td>System audit, runtime detection, winget bootstrap, .venv creation, pip install, npm install, Playwright Chromium, frontend build, pytest 25/25 check.</td>
+        <td><code>logs/installer.log</code><br><code>data/installation-state.json</code></td>
+      </tr>
+      <tr>
+        <td><code>Start_BugSentinelAI.bat</code></td>
+        <td><code>scripts/windows/Start-BugSentinelAI.ps1</code></td>
+        <td>Installation verification, port conflict check, background process spawning, HTTP readiness polling (8000 & 5173), browser dispatch, PID tracking.</td>
+        <td><code>logs/launcher.log</code><br><code>logs/backend.log</code><br><code>logs/frontend.log</code></td>
+      </tr>
+      <tr>
+        <td><code>Stop_BugSentinelAI.bat</code></td>
+        <td><code>scripts/windows/Stop-BugSentinelAI.ps1</code></td>
+        <td>Reads <code>data/runtime/processes.json</code>, terminates backend and frontend PIDs, cleans up tracking markers.</td>
+        <td><code>logs/launcher.log</code></td>
+      </tr>
+      <tr>
+        <td><em>N/A (Utility)</em></td>
+        <td><code>scripts/windows/Package-BugSentinelAI.ps1</code></td>
+        <td>Stages clean source, prunes .venv, node_modules, and cache, compiles <code>BugSentinelAI-Release.zip</code>.</td>
+        <td>Console output</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>7.3 Key Engineering Protections</h2>
+  <ul>
+    <li><strong>Path Resilience:</strong> All scripts utilize <code>%~dp0</code> in batch files and <code>$PSScriptRoot</code> in PowerShell to dynamically resolve paths relative to the script file. This guarantees 100% functionality when the project is located in folders with spaces, on secondary drives (D:\, E:\), or inside OneDrive synchronizations.</li>
+    <li><strong>Process-Scoped Execution Policy:</strong> Batch files invoke PowerShell with <code>-NoProfile -ExecutionPolicy Bypass</code>. This bypasses restrictive Windows machine policies safely for the duration of the script without altering system-wide security settings.</li>
+    <li><strong>Safe Process Tracking & PID Isolation:</strong> When <code>Start-BugSentinelAI.ps1</code> launches Uvicorn and Vite, it records their exact operating system Process IDs (PIDs) in <code>data/runtime/processes.json</code>. The shutdown helper terminates <em>only</em> those specific PIDs. It never issues blind <code>taskkill /F /IM python.exe</code> commands that could destroy a developer's unrelated work.</li>
+    <li><strong>Duplicate-Launch Protection:</strong> If a user double-clicks <code>Start_BugSentinelAI.bat</code> while BugSentinel AI is already running, the launcher performs an HTTP health check. Recognizing that both services are healthy, it informs the user: <em>"BugSentinel AI is already running and fully operational!"</em> and re-opens the browser without spinning up duplicate background processes.</li>
+  </ul>
+</div>
+
+<!-- ======================================================================= -->
+<!-- CHAPTER 8: TECHNICAL STACK -->
+<!-- ======================================================================= -->
+<div class="chapter-page">
+  <div class="chapter-number">Chapter 8</div>
+  <h1>Comprehensive Technology Stack</h1>
+
+  <h2>8.1 Technology Matrix</h2>
+  <p>
+    BugSentinel AI is constructed on modern, high-performance open-source technologies selected for stability, type safety, and local execution capability:
+  </p>
+
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 20%;">Layer</th>
+        <th style="width: 20%;">Technology</th>
+        <th style="width: 15%;">Version</th>
+        <th style="width: 45%;">Role & Rationale</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td rowspan="4"><strong>Frontend UI</strong></td>
+        <td><strong>React</strong></td>
+        <td>19.0.0</td>
+        <td>Component-based declarative UI layer driving the interactive testing lab and real-time state updates.</td>
+      </tr>
+      <tr>
+        <td><strong>TypeScript</strong></td>
+        <td>5.9.3</td>
+        <td>Strict static type checking across all data contracts, matching backend Pydantic models.</td>
+      </tr>
+      <tr>
+        <td><strong>Vite</strong></td>
+        <td>8.3.4</td>
+        <td>High-performance development server and production bundler (compiles 1,936 modules in ~200ms).</td>
+      </tr>
+      <tr>
+        <td><strong>Lucide React</strong></td>
+        <td>1.16.0</td>
+        <td>Crisp, accessible SVG iconography for system telemetry, navigation, and severity badges.</td>
+      </tr>
+      <tr>
+        <td rowspan="4"><strong>Backend API</strong></td>
+        <td><strong>Python</strong></td>
+        <td>3.11+ (3.14)</td>
+        <td>Core backend programming language providing robust standard libraries and async concurrency.</td>
+      </tr>
+      <tr>
+        <td><strong>FastAPI</strong></td>
+        <td>0.143.3</td>
+        <td>High-performance ASGI web framework providing automatic OpenAPI docs and dependency injection.</td>
+      </tr>
+      <tr>
+        <td><strong>Uvicorn</strong></td>
+        <td>0.54.0</td>
+        <td>Lightning-fast ASGI production server running the backend application on <code>127.0.0.1:8000</code>.</td>
+      </tr>
+      <tr>
+        <td><strong>Pydantic</strong></td>
+        <td>2.14.1</td>
+        <td>Strict JSON payload parsing, request validation, serialization, and schema definition.</td>
+      </tr>
+      <tr>
+        <td rowspan="2"><strong>Automation</strong></td>
+        <td><strong>Playwright</strong></td>
+        <td>1.64.0</td>
+        <td>Reliable headless browser automation engine with built-in locator auto-waiting and screenshot capture.</td>
+      </tr>
+      <tr>
+        <td><strong>Chromium</strong></td>
+        <td>Latest stable</td>
+        <td>Deterministic browser runtime for executing web interactions against the target application.</td>
+      </tr>
+      <tr>
+        <td><strong>Persistence</strong></td>
+        <td><strong>SQLite</strong></td>
+        <td>3.x (Built-in)</td>
+        <td>Zero-configuration, lightweight relational database engine storing all test runs and findings.</td>
+      </tr>
+      <tr>
+        <td rowspan="2"><strong>Quality Assurance</strong></td>
+        <td><strong>pytest</strong></td>
+        <td>9.1.1</td>
+        <td>Automated unit, contract, and browser integration test runner executing the 25-test suite.</td>
+      </tr>
+      <tr>
+        <td><strong>oxlint</strong></td>
+        <td>Latest</td>
+        <td>High-performance Rust-based linter enforcing clean code quality across the React codebase.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ======================================================================= -->
+<!-- CHAPTER 9: SYSTEM ARCHITECTURE -->
+<!-- ======================================================================= -->
+<div class="chapter-page">
+  <div class="chapter-number">Chapter 9</div>
+  <h1>System Architecture & Component Interaction</h1>
+
+  <h2>9.1 Architectural Overview</h2>
+  <p>
+    BugSentinel AI is architected as an asynchronous, modular full-stack application. Clear boundaries separate the presentation layer, the API gateway, the orchestration engine, the browser runtime, and the persistence tier:
+  </p>
+
+  <div class="diagram-container">
+    <svg width="600" height="240" viewBox="0 0 600 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Frontend Layer -->
+      <rect x="15" y="10" width="570" height="42" rx="6" fill="#0f172a" stroke="#38bdf8" stroke-width="1.5"/>
+      <text x="300" y="32" fill="#38bdf8" font-family="Outfit, sans-serif" font-weight="700" font-size="11" text-anchor="middle">PRESENTATION LAYER: REACT 19 + TYPESCRIPT + VITE (Port 5173)</text>
+      <text x="300" y="44" fill="#94a3b8" font-family="Inter, sans-serif" font-size="7.5" text-anchor="middle">Operational Dashboard • Findings Drawer • Zoom Modal • Retest Controls</text>
+
+      <!-- Communication Arrow -->
+      <path d="M300 52 V65" stroke="#38bdf8" stroke-width="1.5"/>
+      <text x="325" y="60" fill="#64748b" font-family="JetBrains Mono, monospace" font-size="7">HTTP / JSON</text>
+
+      <!-- API Gateway -->
+      <rect x="15" y="65" width="570" height="38" rx="6" fill="#0b1220" stroke="#0284c7" stroke-width="1.5"/>
+      <text x="300" y="84" fill="#38bdf8" font-family="Outfit, sans-serif" font-weight="700" font-size="10.5" text-anchor="middle">API GATEWAY: FASTAPI + UVICORN (Port 8000)</text>
+      <text x="300" y="95" fill="#94a3b8" font-family="Inter, sans-serif" font-size="7" text-anchor="middle">/api/health • /api/v1/scenarios • /api/v1/runs • /api/v1/findings • /artifacts</text>
+
+      <!-- Orchestrator Box -->
+      <rect x="40" y="112" width="520" height="42" rx="6" fill="#1e293b" stroke="#0284c7" stroke-width="1.5"/>
+      <text x="300" y="130" fill="#f8fafc" font-family="Outfit, sans-serif" font-weight="700" font-size="10.5" text-anchor="middle">RUN ORCHESTRATOR (backend/app/services/orchestrator.py)</text>
+      <text x="300" y="143" fill="#94a3b8" font-family="Inter, sans-serif" font-size="7.5" text-anchor="middle">Coordinates Scenario Planning • Execution Loop • Verifier • Report Service</text>
+
+      <!-- Three Pillars -->
+      <!-- Pillar 1: Planner -->
+      <rect x="40" y="165" width="160" height="60" rx="6" fill="#0f172a" stroke="#334155" stroke-width="1.2"/>
+      <text x="120" y="184" fill="#38bdf8" font-family="Outfit, sans-serif" font-weight="700" font-size="9.5" text-anchor="middle">TEST PLANNER</text>
+      <text x="120" y="198" fill="#94a3b8" font-family="Inter, sans-serif" font-size="7.5" text-anchor="middle">Deterministic Scenario Registry</text>
+      <text x="120" y="210" fill="#64748b" font-family="Inter, sans-serif" font-size="7" text-anchor="middle">Validates Target & Scenarios</text>
+
+      <!-- Pillar 2: Browser Engine -->
+      <rect x="220" y="165" width="160" height="60" rx="6" fill="#0f172a" stroke="#f59e0b" stroke-width="1.2"/>
+      <text x="300" y="184" fill="#fbbf24" font-family="Outfit, sans-serif" font-weight="700" font-size="9.5" text-anchor="middle">PLAYWRIGHT ENGINE</text>
+      <text x="300" y="198" fill="#94a3b8" font-family="Inter, sans-serif" font-size="7.5" text-anchor="middle">Headless Chromium Runner</text>
+      <text x="300" y="210" fill="#64748b" font-family="Inter, sans-serif" font-size="7" text-anchor="middle">Executes on ShopDemo Target</text>
+
+      <!-- Pillar 3: Persistence -->
+      <rect x="400" y="165" width="160" height="60" rx="6" fill="#0f172a" stroke="#10b981" stroke-width="1.2"/>
+      <text x="480" y="184" fill="#34d399" font-family="Outfit, sans-serif" font-weight="700" font-size="9.5" text-anchor="middle">PERSISTENCE TIER</text>
+      <text x="480" y="198" fill="#94a3b8" font-family="Inter, sans-serif" font-size="7.5" text-anchor="middle">SQLite (runs & findings)</text>
+      <text x="480" y="210" fill="#64748b" font-family="Inter, sans-serif" font-size="7" text-anchor="middle">Artifacts (PNGs & logs)</text>
+    </svg>
+    <div class="figure-caption">Figure 9.1: BugSentinel AI Component Architecture & Data Flow Diagram.</div>
+  </div>
+
+  <h2>9.2 Component Responsibilities</h2>
+  <ul>
+    <li><strong>Presentation Tier (Vite + React 19):</strong> Runs independently on port 5173. Communicates with the backend exclusively via typed asynchronous fetch requests defined in <code>frontend/src/lib/api.ts</code>. Includes optimistic UI updates, polling fallback, and responsive drawer controls.</li>
+    <li><strong>API Gateway (FastAPI):</strong> Enforces strict Pydantic v2 validation contracts, manages CORS headers for local hostnames, routes requests to domain services, and mounts static file handlers for <code>/demo/</code> and <code>/artifacts/</code>.</li>
+    <li><strong>Run Orchestrator:</strong> Acts as the transactional coordinator for a test run. It generates a Run ID, calls the Planner for validation, loops through scenarios via the Verifier, calls the Report Service to extract findings, persists records into SQLite, and returns a unified <code>RunResponse</code> payload.</li>
+    <li><strong>Browser Engine:</strong> Encapsulates all direct Playwright Chromium interaction. Manages browser contexts, selector queries, timeout limits, and failure screenshot generation.</li>
+    <li><strong>Persistence Tier:</strong> SQLite database located at <code>data/bugsentinel.sqlite3</code> stores persistent test audit records, while full-page PNG screenshots and log files reside in <code>data/artifacts/run_id/</code>.</li>
+  </ul>
+</div>
+
+<!-- ======================================================================= -->
+<!-- CHAPTER 10: INTERNAL MODULES AND CODE ORGANIZATION -->
+<!-- ======================================================================= -->
+<div class="chapter-page">
+  <div class="chapter-number">Chapter 10</div>
+  <h1>Internal Modules and Code Organization</h1>
+
+  <h2>10.1 Workspace Directory Structure</h2>
+  <pre><code>BugSentinel AI/
+├── Install_BugSentinelAI.bat       # Primary 1-click Windows installer entrypoint
+├── Start_BugSentinelAI.bat         # Primary 1-click Windows application launcher
+├── Stop_BugSentinelAI.bat          # Safe process shutdown utility
+├── requirements.txt                # Python backend dependencies
+├── README.md                       # Master project overview & quickstart
+├── backend/
+│   ├── app/
+│   │   ├── main.py                 # FastAPI application, static mounts, CORS
+│   │   ├── config.py               # Paths, environment configuration, settings
+│   │   ├── schemas.py              # Pydantic v2 request/response data contracts
+│   │   ├── database.py             # SQLite persistence layer (runs & findings)
+│   │   ├── api/
+│   │   │   ├── routes_health.py    # GET /api/health
+│   │   │   ├── routes_scenarios.py # GET /api/v1/scenarios, GET /api/v1/demo
+│   │   │   ├── routes_runs.py      # POST /api/v1/runs, GET /api/v1/runs
+│   │   │   └── routes_findings.py  # GET /api/v1/findings, POST .../regression
+│   │   └── services/
+│   │       ├── planner.py          # Deterministic scenario definitions & validation
+│   │       ├── browser_engine.py   # Headless Playwright Chromium driver
+│   │       ├── verifier.py         # Multi-attempt retry & failure classification
+│   │       ├── orchestrator.py     # End-to-end execution lifecycle coordinator
+│   │       ├── report_service.py   # Finding extraction & severity assignment
+│   │       └── regression_service.py # Targeted retesting for defect verification
+│   └── demo_site/
+│       ├── index.html              # Target e-commerce web application
+│       ├── styles.css              # Target styling
+│       └── app.js                  # Checkout logic with deliberate email defect
+├── frontend/
+│   ├── package.json                # React 19, TypeScript, Vite scripts
+│   ├── vite.config.ts              # Bundler config & backend proxy rules
+│   └── src/
+│       ├── App.tsx                 # Router & view coordinator
+│       ├── features/
+│       │   ├── landing/LandingPage.tsx     # Cinematic marketing showcase
+│       │   └── dashboard/DashboardPage.tsx # Operational testing lab
+│       ├── components/testing/     # Finding drawer, zoom modal, history table
+│       └── styles/                 # tokens.css, global.css, dashboard.css
+├── scripts/
+│   └── windows/
+│       ├── common.ps1              # Path resolution, logging, HTTP readiness
+│       ├── Install-BugSentinelAI.ps1 # 7-step installer engine with winget
+│       ├── Start-BugSentinelAI.ps1 # Process orchestrator & duplicate guard
+│       ├── Stop-BugSentinelAI.ps1  # Tracked PID shutdown engine
+│       └── Package-BugSentinelAI.ps1 # Clean distribution ZIP generator
+├── tests/                          # 25 automated pytest tests
+└── data/
+    ├── bugsentinel.sqlite3         # SQLite database file
+    └── artifacts/                  # Screenshots and execution logs per run</code></pre>
+</div>
+
+<!-- ======================================================================= -->
+<!-- CHAPTER 11: CORE ENGINEERING CONCEPTS -->
+<!-- ======================================================================= -->
+<div class="chapter-page">
+  <div class="chapter-number">Chapter 11</div>
+  <h1>Core Engineering Concepts & Principles</h1>
+
+  <h2>11.1 Key Technical Principles</h2>
+  <ul>
+    <li><strong>Deterministic Scenarios vs. Brittle Autonomous Crawlers:</strong> While general AI agents can attempt to autonomously crawl arbitrary web pages, in commercial software QA, unconstrained crawling introduces unpredictability and massive execution variance. BugSentinel AI uses deterministic, selector-anchored scenario contracts (<code>planner.py</code>) to guarantee that every assertion tests a specific, reproducible customer journey.</li>
+    <li><strong>Bounded Multi-Attempt Verification:</strong> When a UI test fails, the primary engineering question is whether the failure is an application regression or a timing glitch. Rather than infinite retries (which mask race conditions), BugSentinel AI executes an immediate second attempt under fresh browser context isolation. Two consecutive failures provide mathematical confidence of reproducibility.</li>
+    <li><strong>Separation of Concerns:</strong> The browser driver (<code>browser_engine.py</code>) knows only how to interact with the DOM and capture pixels. The verifier (<code>verifier.py</code>) knows only how to compare attempt outcomes. The report service (<code>report_service.py</code>) knows only how to assess severity and construct findings. The orchestrator (<code>orchestrator.py</code>) binds them together. This strict separation ensures maintainability and modular testing.</li>
+    <li><strong>Stateless Process Tracking:</strong> Windows background processes are managed without fragile global process-name kills. PIDs are persisted to a JSON ledger (<code>data/runtime/processes.json</code>), ensuring that process cleanup is isolated and surgical.</li>
+  </ul>
+</div>
+
+<!-- ======================================================================= -->
+<!-- CHAPTER 12: DATA FLOW, SCHEMA & SQLITE PERSISTENCE -->
+<!-- ======================================================================= -->
+<div class="chapter-page">
+  <div class="chapter-number">Chapter 12</div>
+  <h1>Data Flow, Schema & SQLite Persistence</h1>
+
+  <h2>12.1 Database Schema</h2>
+  <p>
+    Persistence is managed by SQLite (<code>data/bugsentinel.sqlite3</code>) with enforced foreign key constraints. Two primary tables track the complete testing audit trail:
+  </p>
+
+  <pre><code>CREATE TABLE runs (
+    run_id TEXT PRIMARY KEY,
+    target_id TEXT NOT NULL,
+    status TEXT NOT NULL,
+    started_at TEXT NOT NULL,
+    completed_at TEXT,
+    duration_ms INTEGER DEFAULT 0,
+    total_tests INTEGER DEFAULT 0,
+    passed_count INTEGER DEFAULT 0,
+    failed_count INTEGER DEFAULT 0,
+    flaky_count INTEGER DEFAULT 0,
+    error_count INTEGER DEFAULT 0,
+    result_json TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX idx_runs_started_at ON runs (started_at DESC);
+
+CREATE TABLE findings (
+    finding_id TEXT PRIMARY KEY,
+    run_id TEXT NOT NULL,
+    scenario_id TEXT NOT NULL,
+    title TEXT NOT NULL,
+    description TEXT NOT NULL,
+    severity TEXT NOT NULL,
+    classification TEXT NOT NULL,
+    expected_behavior TEXT NOT NULL,
+    actual_behavior TEXT NOT NULL,
+    first_attempt_status TEXT NOT NULL,
+    verification_attempt_status TEXT,
+    reproducible INTEGER NOT NULL DEFAULT 1,
+    screenshot_url TEXT,
+    logs_json TEXT NOT NULL,
+    created_at TEXT NOT NULL,
+    FOREIGN KEY (run_id) REFERENCES runs (run_id) ON DELETE CASCADE
+);
+CREATE INDEX idx_findings_run_id ON findings (run_id);
+CREATE INDEX idx_findings_scenario ON findings (scenario_id);</code></pre>
+</div>
+
+<!-- ======================================================================= -->
+<!-- CHAPTER 13: REST API REFERENCE -->
+<!-- ======================================================================= -->
+<div class="chapter-page">
+  <div class="chapter-number">Chapter 13</div>
+  <h1>Complete REST API Reference Manual</h1>
+
+  <h2>13.1 Endpoints Specification</h2>
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 15%;">Method</th>
+        <th style="width: 30%;">Endpoint</th>
+        <th style="width: 35%;">Description & Request Body</th>
+        <th style="width: 20%;">Status Codes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>GET</code></td>
+        <td><code>/api/health</code></td>
+        <td>Returns live system status and application version.</td>
+        <td><code>200 OK</code></td>
+      </tr>
+      <tr>
+        <td><code>GET</code></td>
+        <td><code>/api/v1/scenarios</code></td>
+        <td>Lists all registered deterministic test scenarios.</td>
+        <td><code>200 OK</code></td>
+      </tr>
+      <tr>
+        <td><code>GET</code></td>
+        <td><code>/api/v1/demo</code></td>
+        <td>Target details, browser readiness check, defect summary.</td>
+        <td><code>200 OK</code></td>
+      </tr>
+      <tr>
+        <td><code>POST</code></td>
+        <td><code>/api/v1/runs</code></td>
+        <td>Triggers test run. Body: <code>{ target_id, scenario_ids, verify_failures }</code></td>
+        <td><code>200 OK</code>, <code>400</code>, <code>500</code></td>
+      </tr>
+      <tr>
+        <td><code>GET</code></td>
+        <td><code>/api/v1/runs</code></td>
+        <td>Retrieves run history summaries (Query: <code>limit</code>).</td>
+        <td><code>200 OK</code></td>
+      </tr>
+      <tr>
+        <td><code>GET</code></td>
+        <td><code>/api/v1/runs/{run_id}</code></td>
+        <td>Retrieves full run result, attempt history, and findings.</td>
+        <td><code>200 OK</code>, <code>404</code></td>
+      </tr>
+      <tr>
+        <td><code>GET</code></td>
+        <td><code>/api/v1/findings</code></td>
+        <td>Lists findings filtered optionally by <code>run_id</code>.</td>
+        <td><code>200 OK</code></td>
+      </tr>
+      <tr>
+        <td><code>GET</code></td>
+        <td><code>/api/v1/findings/{id}</code></td>
+        <td>Retrieves finding detail with screenshot URL and logs.</td>
+        <td><code>200 OK</code>, <code>404</code></td>
+      </tr>
+      <tr>
+        <td><code>POST</code></td>
+        <td><code>/api/v1/findings/{id}/regression</code></td>
+        <td>Executes targeted retest of finding to verify resolution.</td>
+        <td><code>200 OK</code>, <code>404</code></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>13.2 Verified Sample Payloads</h2>
+  <h3>A. Run Execution Request (`POST /api/v1/runs`)</h3>
+  <pre><code>{
+  "target_id": "shopdemo",
+  "scenario_ids": ["homepage_loads", "valid_checkout_succeeds", "invalid_email_is_rejected"],
+  "verify_failures": true
+}</code></pre>
+
+  <h3>B. Finding Response Object (`GET /api/v1/findings/{id}`)</h3>
+  <pre><code>{
+  "finding_id": "fnd_74a819b2",
+  "run_id": "run_0a7d49ac",
+  "scenario_id": "invalid_email_is_rejected",
+  "title": "Email Validation Bypass on Checkout",
+  "description": "Form accepts invalid email string 'not-an-email' and confirms order.",
+  "severity": "MEDIUM",
+  "classification": "REPRODUCIBLE_FAILURE",
+  "expected_behavior": "Checkout rejects invalid email and does NOT display order confirmation.",
+  "actual_behavior": "Order placed successfully! Order #ORD-849201 confirmed for BugHunter QA.",
+  "reproducible": true,
+  "screenshot_url": "/artifacts/run_0a7d49ac/invalid_email_is_rejected_attempt_2.png",
+  "created_at": "2026-10-17T02:09:28Z"
+}</code></pre>
+</div>
+
+<!-- ======================================================================= -->
+<!-- CHAPTER 14: TESTING AND QUALITY ASSURANCE -->
+<!-- ======================================================================= -->
+<div class="chapter-page">
+  <div class="chapter-number">Chapter 14</div>
+  <h1>Automated Testing & Quality Assurance</h1>
+
+  <h2>14.1 Verified Automated Test Suite</h2>
+  <p>
+    The BugSentinel AI codebase is continuously validated through a comprehensive 25-test pytest suite located in <code>tests/</code>.
+    The test suite executes against real headless Chromium instances, isolated mock SQLite databases, and strict API test clients.
+  </p>
+  <p><strong>Observed Execution Command:</strong> <code>python -m pytest -v</code></p>
+  <p><strong>Observed Result:</strong> <span class="badge badge-verified">25 PASSED</span> in 8.78 seconds.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 30%;">Test Module</th>
+        <th style="width: 15%;">Pass Count</th>
+        <th style="width: 55%;">Verified Coverage & Invariants</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>test_api.py</code></td>
+        <td>6 passed</td>
+        <td>404 handling for unknown run/finding IDs, 400 rejection for unknown targets/scenarios, empty run history handling.</td>
+      </tr>
+      <tr>
+        <td><code>test_browser_engine.py</code></td>
+        <td>4 passed</td>
+        <td>Real headless Chromium automation against ShopDemo: Homepage load, valid checkout, deliberate email defect detection, full orchestration.</td>
+      </tr>
+      <tr>
+        <td><code>test_database.py</code></td>
+        <td>3 passed</td>
+        <td>SQLite schema table creation, transactional foreign keys, run serialization, finding retrieval with JSON log parsing.</td>
+      </tr>
+      <tr>
+        <td><code>test_health.py</code></td>
+        <td>3 passed</td>
+        <td><code>GET /api/health</code> status 200 OK, root endpoint info redirect, <code>/api/v1/demo</code> configuration and readiness.</td>
+      </tr>
+      <tr>
+        <td><code>test_scenarios.py</code></td>
+        <td>4 passed</td>
+        <td>Planner registry listing, scenario validation, unknown ID exception raising, <code>GET /api/v1/scenarios</code> endpoint.</td>
+      </tr>
+      <tr>
+        <td><code>test_verifier_classification.py</code></td>
+        <td>5 passed</td>
+        <td>Deterministic classification unit tests: Initial pass, reproducible failure on attempt 2, flaky classification on attempt 2 recovery, engine error handling, report service finding extraction.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ======================================================================= -->
+<!-- CHAPTER 15: TROUBLESHOOTING GUIDE -->
+<!-- ======================================================================= -->
+<div class="chapter-page">
+  <div class="chapter-number">Chapter 15</div>
+  <h1>Comprehensive Troubleshooting Guide</h1>
+
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 25%;">Symptom</th>
+        <th style="width: 35%;">Likely Cause</th>
+        <th style="width: 40%;">Verified Resolution</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Port 8000 already in use</strong></td>
+        <td>An earlier Uvicorn instance or background Python process is holding the port.</td>
+        <td>Run <code>Stop_BugSentinelAI.bat</code>. If lingering, run <code>Get-NetTCPConnection -LocalPort 8000</code> and terminate the owning process.</td>
+      </tr>
+      <tr>
+        <td><strong>Port 5173 already in use</strong></td>
+        <td>An existing Vite dev server or frontend process is holding port 5173.</td>
+        <td>Run <code>Stop_BugSentinelAI.bat</code>. Check <code>logs/frontend.log</code> for process details.</td>
+      </tr>
+      <tr>
+        <td><strong>Playwright Chromium missing</strong></td>
+        <td>Browser binaries were not downloaded during setup.</td>
+        <td>Run <code>.\.venv\Scripts\python.exe -m playwright install chromium</code> or rerun <code>Install_BugSentinelAI.bat</code>.</td>
+      </tr>
+      <tr>
+        <td><strong>Backend health check timeout</strong></td>
+        <td>FastAPI process crashed during startup due to missing dependency or SQLite lock.</td>
+        <td>Inspect <code>logs/backend.log</code> and <code>logs/backend_err.log</code> for the exact traceback.</td>
+      </tr>
+      <tr>
+        <td><strong>Frontend cannot connect to API</strong></td>
+        <td>Backend server is not running on <code>127.0.0.1:8000</code>.</td>
+        <td>Verify <code>curl.exe -s http://127.0.0.1:8000/api/health</code> returns <code>{"status":"ok"}</code>.</td>
+      </tr>
+      <tr>
+        <td><strong>PowerShell execution policy error</strong></td>
+        <td>Windows group policy blocks unsigned scripts.</td>
+        <td>Always launch via <code>Install_BugSentinelAI.bat</code> or <code>Start_BugSentinelAI.bat</code> which pass <code>-ExecutionPolicy Bypass</code> automatically.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ======================================================================= -->
+<!-- CHAPTER 16: SECURITY AND PRIVACY -->
+<!-- ======================================================================= -->
+<div class="chapter-page">
+  <div class="chapter-number">Chapter 16</div>
+  <h1>Security, Privacy & Safety Boundaries</h1>
+
+  <h2>16.1 Security Architecture</h2>
+  <ul>
+    <li><strong>Target Allowlisting:</strong> The test engine strictly prohibits arbitrary external URL navigation. The <code>target_id</code> parameter in <code>RunCreateRequest</code> is validated against an allowlist (<code>shopdemo</code>). Requests attempting to point the browser to arbitrary public domains or internal cloud metadata IP addresses (e.g., <code>169.254.169.254</code>) are rejected with HTTP 400.</li>
+    <li><strong>Path Traversal Immunity:</strong> Static file retrieval routes (<code>/artifacts/{run_id}/{file}</code>) sanitize file paths and enforce resolution within <code>settings.ARTIFACTS_DIR</code>. Directory traversal attacks (<code>../../</code>) are blocked by FastAPI's <code>StaticFiles</code> provider.</li>
+    <li><strong>Zero External Data Leaks:</strong> BugSentinel AI executes 100% locally on the host machine. No telemetry, customer form inputs, screenshots, or code artifacts are transmitted to third-party cloud servers or external LLM APIs.</li>
+    <li><strong>Zero Secrets in Version Control:</strong> The codebase uses <code>.env.example</code> templates; all database records and process PIDs reside in the gitignored <code>data/</code> and <code>logs/</code> folders.</li>
+  </ul>
+</div>
+
+<!-- ======================================================================= -->
+<!-- CHAPTER 17: LIMITATIONS AND ROADMAP -->
+<!-- ======================================================================= -->
+<div class="chapter-page">
+  <div class="chapter-number">Chapter 17</div>
+  <h1>System Limitations and Future Roadmap</h1>
+
+  <h2>17.1 Current System Limitations</h2>
+  <ul>
+    <li><strong>Single Authorized Target:</strong> The current system is tightly integrated with the local ShopDemo e-commerce application. Registering new targets currently requires updating <code>planner.py</code>.</li>
+    <li><strong>Deterministic Scenarios:</strong> Tests are predefined in code; autonomous DOM crawling and LLM-driven test script generation are not yet implemented.</li>
+    <li><strong>Single Browser Engine:</strong> Headless Chromium is the only bundled browser runtime. Firefox and WebKit are supported by Playwright but not provisioned by the installer to conserve disk space.</li>
+  </ul>
+
+  <h2>17.2 Future Development Roadmap</h2>
+  <ul>
+    <li><strong>v1.1 (CI/CD Integration):</strong> Headless CLI runner emitting JUnit XML and GitHub Actions step summaries for automated pull request gating.</li>
+    <li><strong>v1.2 (Multi-Browser Support):</strong> Installer flags to provision Firefox and WebKit for cross-browser parity verification.</li>
+    <li><strong>v2.0 (Autonomous LLM Exploration):</strong> Integrating Gemini / Claude multi-modal models to explore unmapped web applications, identify interactive elements, and autonomously propose synthetic test scenarios.</li>
+  </ul>
+</div>
+
+<!-- ======================================================================= -->
+<!-- CHAPTER 18: TECHNICAL GLOSSARY -->
+<!-- ======================================================================= -->
+<div class="chapter-page">
+  <div class="chapter-number">Chapter 18</div>
+  <h1>Technical Glossary of Terms</h1>
+
+  <ul>
+    <li><strong>Assertion:</strong> A programmatic boolean condition that must evaluate to true for a test to pass (e.g., confirming that order confirmation text is absent when an invalid email is entered).</li>
+    <li><strong>Bounded Retry:</strong> A verification mechanism that executes a fixed, limited number of attempts (specifically 2) to establish repeatability without masking race conditions.</li>
+    <li><strong>Chromium:</strong> The open-source browser engine developed by Google that powers Google Chrome and Microsoft Edge, driven headlessly by Playwright.</li>
+    <li><strong>Deterministic Test:</strong> A test scenario whose inputs, navigation steps, and assertion rules are explicitly codified to ensure identical preconditions on every execution.</li>
+    <li><strong>Flaky Test:</strong> A test that yields both passing and failing outcomes across consecutive runs without any modification to the application code.</li>
+    <li><strong>Playwright:</strong> A modern Python and Node.js browser automation library providing reliable cross-browser execution, auto-waiting locators, and headless execution.</li>
+    <li><strong>Regression Retest:</strong> Re-executing a specific test scenario linked to an earlier bug finding to prove that a code modification successfully fixed the defect.</li>
+    <li><strong>Reproducible Failure:</strong> A failure classification applied when a scenario fails on both the initial attempt and an immediate verification attempt.</li>
+  </ul>
+</div>
+
+<!-- ======================================================================= -->
+<!-- CHAPTER 19: QUICK-START REFERENCE -->
+<!-- ======================================================================= -->
+<div class="chapter-page">
+  <div class="chapter-number">Chapter 19</div>
+  <h1>Quick-Start Reference Cheat Sheet</h1>
+
+  <h2>19.1 Essential Commands & URLs</h2>
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 30%;">Action / Resource</th>
+        <th style="width: 35%;">Command or Location</th>
+        <th style="width: 35%;">Expected Behavior</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>1-Click Install</strong></td>
+        <td>Double-click <code>Install_BugSentinelAI.bat</code></td>
+        <td>Provisions .venv, packages, Playwright Chromium, builds frontend, verifies tests.</td>
+      </tr>
+      <tr>
+        <td><strong>1-Click Launch</strong></td>
+        <td>Double-click <code>Start_BugSentinelAI.bat</code></td>
+        <td>Starts backend & frontend, polls health, opens default browser to dashboard.</td>
+      </tr>
+      <tr>
+        <td><strong>Safe Shutdown</strong></td>
+        <td>Double-click <code>Stop_BugSentinelAI.bat</code></td>
+        <td>Terminates only tracked BugSentinel AI processes; frees ports 8000 and 5173.</td>
+      </tr>
+      <tr>
+        <td><strong>Testing Lab URL</strong></td>
+        <td><code>http://127.0.0.1:5173/#dashboard</code></td>
+        <td>Full operational workspace with scenario trigger, findings drawer, zoom modal.</td>
+      </tr>
+      <tr>
+        <td><strong>ShopDemo Target</strong></td>
+        <td><code>http://127.0.0.1:8000/demo/</code></td>
+        <td>Target e-commerce store containing deliberate email checkout bug.</td>
+      </tr>
+      <tr>
+        <td><strong>OpenAPI Swagger Docs</strong></td>
+        <td><code>http://127.0.0.1:8000/docs</code></td>
+        <td>Interactive API documentation for all REST routes.</td>
+      </tr>
+      <tr>
+        <td><strong>Run Automated Tests</strong></td>
+        <td><code>.\.venv\Scripts\python.exe -m pytest -v</code></td>
+        <td>Executes full 25-test suite (unit, contract, and browser integration).</td>
+      </tr>
+      <tr>
+        <td><strong>Package Distribution</strong></td>
+        <td><code>powershell scripts\windows\Package-BugSentinelAI.ps1</code></td>
+        <td>Compiles clean, transferable <code>BugSentinelAI-Release.zip</code> (0.17 MB).</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="footer-ref">
+    BugSentinel AI Project Report • Repository: https://github.com/rahulgoreofficial/BugSentinel-AI • Edition 1.0
+  </div>
+</div>
+
+</body>
+</html>
